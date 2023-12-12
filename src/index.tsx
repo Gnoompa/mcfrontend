@@ -1,12 +1,12 @@
-import React, { Fragment } from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { ToastProvider } from 'react-toast-notifications';
 import { Music } from '@features/global/components/musics/Music';
 import { store } from '@redux/store';
 import GlobalStyle from '@root/features/global/styles/global.styles';
 import { AppRouter } from '@root/router';
 import mixpanel from 'mixpanel-browser';
+import { Fragment } from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { ToastProvider } from 'react-toast-notifications';
 
 // Enabling the debug mode flag is useful during implementation,
 // but it's recommended you remove it for production

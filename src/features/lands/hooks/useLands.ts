@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import useMetamask from '@features/global/hooks/useMetamask';
 import { userGameManagerSelector } from '@selectors/commonAppSelectors';
 import {
   addressSelector,
   landsMissionsLimitsSelector
 } from '@selectors/userStatsSelectors';
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
+export const FREE_LAND_ALLOWLIST_ID = 1;
 
 const useLands = (tokens: string[] | null, ethInstance?: any) => {
   const [stats, setStats] = useState<unknown[]>([]);
@@ -34,7 +36,17 @@ const useLands = (tokens: string[] | null, ethInstance?: any) => {
     (async () => await getData())();
   }, [tokens, gm, address, ethInstance, getData]);
 
-  return { stats, landsMissionsLimits };
+  const getAllowlistClaims = useCallback(() => {
+    makeCallRequest<unknown[]>({
+      contract: gm ?? window.GM,
+      method: 'getAllowlistCounter',
+      params: [FREE_LAND_ALLOWLIST_ID, address],
+      address,
+      errorText: 'Error getting lands free claiming allowlist'
+    });
+  }, [gm]);
+
+  return { stats, getAllowlistClaims, landsMissionsLimits };
 };
 
 export default useLands;

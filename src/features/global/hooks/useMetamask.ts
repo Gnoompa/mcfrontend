@@ -1,12 +1,12 @@
-import React from 'react';
-import isDev from 'react-is-dev';
-import { useToasts } from 'react-toast-notifications';
 import useFlags from '@global/hooks/useFlags';
 import { METAMASK_EVENTS, MetamaskWrapperType } from '@global/types';
 import { logDevInfo } from '@global/utils/analytics';
 import { formatRequestWrapperPayload } from '@global/utils/gas';
 import { callWrapper, txWrapper } from '@global/utils/tx-wrapper';
 import { CURRENT_CHAIN } from '@root/settings/chains';
+import React from 'react';
+import isDev from 'react-is-dev';
+import { useToasts } from 'react-toast-notifications';
 
 const useMetamask = () => {
   const { addToast } = useToasts();
@@ -68,6 +68,8 @@ const useMetamask = () => {
   }: MetamaskWrapperType) => {
     const payload = await formatRequestWrapperPayload(address);
 
+    console.log(method, params);
+
     txWrapper(
       (await contract).methods[method](...params).send({
         ...payload,
@@ -104,8 +106,8 @@ const useMetamask = () => {
     errorText,
     eventName,
     transactionOptions
-  }: MetamaskWrapperType) =>
-    type === METAMASK_EVENTS.send
+  }: MetamaskWrapperType) => {
+    return type === METAMASK_EVENTS.send
       ? makeSendRequest({
           address,
           contract,
@@ -129,6 +131,7 @@ const useMetamask = () => {
           errorText,
           type
         });
+  };
 
   return {
     makeCallRequest,

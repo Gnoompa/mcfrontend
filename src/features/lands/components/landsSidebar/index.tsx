@@ -1,6 +1,3 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useToasts } from 'react-toast-notifications';
 import PolygonBackend from '@api/polygonBackend';
 import ToggleSwitch from '@features/global/components/toggler/toggleButton';
 import { freeReserve } from '@features/globus/utils/reserveHelper';
@@ -46,6 +43,9 @@ import {
   toggleMyLandPopup
 } from '@slices/appPartsSlice';
 import { deleteItemFromChart, toggleCartSidebar } from '@slices/cartSlice';
+import { useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useToasts } from 'react-toast-notifications';
 
 import {
   ActiveLandsControlWrapper,
@@ -125,7 +125,7 @@ export const NoLandsSidebarView = () => {
     try {
       (async () => {
         const data = await PolygonBackend.getHeaderStats();
-        const stat = data.max ?? 0;
+        const stat = data?.max ?? 0;
         setMaxClnyIncome(stat);
       })();
     } catch (e) {}

@@ -1,6 +1,3 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useToasts } from 'react-toast-notifications';
 import { useAvatars } from '@avatars/hooks/useAvatars';
 import { freeReserve } from '@features/globus/utils/reserveHelper';
 import {
@@ -24,6 +21,7 @@ import {
   trackUserEvent
 } from '@global/utils/analytics';
 import { EMPTY_ADDRESS } from '@global/utils/etc';
+import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import {
   isCollectingSelector,
   isLoadingTokensSelector
@@ -36,8 +34,8 @@ import { cartItemsSelector } from '@selectors/cartSliceSelectors';
 import {
   addressSelector,
   clnyBalanceSelector,
-  earnedAmountSelector,
   earnSpeedSelector,
+  earnedAmountSelector,
   mintedTokensSelector,
   tokensSelector,
   userBalanceSelector
@@ -61,13 +59,16 @@ import {
   setAddress,
   setAvatarsMissionsLimits,
   setColonyBalance,
-  setEarnedAmount,
   setEarnSpeed,
+  setEarnedAmount,
   setLandsMissionsLimits,
   setMintedTokens,
   setUserBalance,
   setUserTokens
 } from '@slices/userStatsSlice';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToasts } from 'react-toast-notifications';
 import Web3 from 'web3';
 import { fromWei } from 'web3-utils';
 
@@ -212,7 +213,12 @@ export const useBalance = () => {
   );
 
   const claimToken = React.useCallback(
-    async (tokenNumbers: number[], address: string, web3Instance: Web3) => {
+    async (
+      tokenNumbers: number[],
+      address: string,
+      web3Instance: Web3,
+      isFreeClaim?: boolean
+    ) => {
       trackGoogleAnalyticsEvent('cart.start', { tokens: tokenNumbers });
       for (const tokenNumber of tokenNumbers) {
         if (Number.isNaN(tokenNumber)) return;
@@ -222,23 +228,55 @@ export const useBalance = () => {
 
       let txHash: string | null = null;
 
-      const feeValue = await makeRequest({
-        method: CONTRACT_METHODS.getFee,
-        params: [
-          tokenNumbers.length,
-          localStorage.getItem('referralAddress') ?? EMPTY_ADDRESS
+      const feeValue = isFreeClaim
+        ? 0
+        : await makeRequest({
+            method: CONTRACT_METHODS.getFee,
+            params: [
+              tokenNumbers.length,
+              localStorage.getItem('referralAddress') ?? EMPTY_ADDRESS
+            ],
+            address,
+            type: METAMASK_EVENTS.call,
+            contract: gameManager ?? getGameManager()
+          });
+
+      const MT = [
+        [
+          ['0x5b3999bc2e8c46f75BF629DA951559D83E34FBdD', 5],
+          ['0x27ff262f0383E31F654ea00E78a043075f00A1A1', 3],
+          ['0xD4511E8D0233613383502E3da416Ac26c768C57e', 3],
+          ['0xA9A088600Fb0D0dD392445cc6328f07D352f59b0', 3],
+          ['0x5B38Da6a701c568545dCfcB03FcB875f56beddC4', 2]
         ],
-        address,
-        type: METAMASK_EVENTS.call,
-        contract: gameManager ?? getGameManager()
-      });
+        ['address', 'uint']
+      ];
+
+      // @ts-ignore
+      const maxFreeAmount = MT[0].filter(
+        // @ts-ignore
+        (el) => `${el[0]}`.toLowerCase() == userAddress?.toLowerCase()
+      )[0][1];
 
       makeRequest({
         type: METAMASK_EVENTS.send,
         method: CONTRACT_METHODS.claim,
         contract: gameManager ?? getGameManager(),
         params: [
-          tokenNumbers,
+          isFreeClaim
+            ? [
+                [
+                  tokenNumbers[0],
+                  1,
+                  maxFreeAmount,
+                  // @ts-ignore
+                  StandardMerkleTree.of(MT[0], MT[1]).getProof([
+                    userAddress,
+                    maxFreeAmount
+                  ])
+                ]
+              ]
+            : tokenNumbers,
           localStorage.getItem('referralAddress') ?? EMPTY_ADDRESS
         ],
         onLoad: (hash: string) => {
@@ -533,9 +571,9 @@ export const useBalance = () => {
   window.updateCLNY = updateCLNYBalance;
   window.updateEarnedAll = updateEarnedAll;
   window.fetchBalance = fetchUserBalance;
-  window.claim = async (tokens: number[]) => {
+  window.claim = async (tokens: number[], isFreeClaim?: boolean) => {
     if (window.xweb3 && address)
-      await claimToken(tokens, address, window.xweb3);
+      await claimToken(tokens, address, window.xweb3, isFreeClaim);
   };
   window.transfer = transfer;
   window.collectAllStats = collectAllStats;

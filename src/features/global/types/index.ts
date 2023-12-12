@@ -60,7 +60,8 @@ export enum CONTRACT_METHODS {
   lastMintedByUser = 'lastMintedByUser',
   getNames = 'getNames',
   getTransportCondition = 'getTransportCondition',
-  repairTransport = 'repairTransport'
+  repairTransport = 'repairTransport',
+  getAllowlistCounter = 'getAllowlistCounter'
 }
 
 export enum TOASTS_APPEARANCE {

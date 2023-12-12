@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useToasts } from 'react-toast-notifications';
+import useMetamask from '@features/global/hooks/useMetamask';
 import { lats, longs } from '@features/globus/constants';
 import {
   PartedMarsMainWrapper,
@@ -15,12 +13,12 @@ import {
 import { getReserve, reserve } from '@features/globus/utils/reserveHelper';
 import { EMPTY_ADDRESS } from '@global/utils/etc';
 import {
-  entity,
   Extent,
   Globe,
-  layer,
   LonLat,
   Popup,
+  entity,
+  layer,
   scene
 } from '@openglobus/og';
 import { NETWORK_DATA } from '@root/settings';
@@ -31,11 +29,17 @@ import {
   cartStateSelector
 } from '@selectors/cartSliceSelectors';
 import { userGameManagerSelector } from '@selectors/commonAppSelectors';
-import { addressSelector } from '@selectors/userStatsSelectors';
+import {
+  addressSelector,
+  allowlistSelector
+} from '@selectors/userStatsSelectors';
 import { toggleMyLandPopup } from '@slices/appPartsSlice';
 import { addItemToCart } from '@slices/cartSlice';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToasts } from 'react-toast-notifications';
+import { Address } from 'viem';
 import Web3 from 'web3';
-import useMetamask from '@features/global/hooks/useMetamask';
 
 interface Props {
   allTokens: string[] | null;
@@ -66,6 +70,7 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
   const gm = useSelector(userGameManagerSelector);
   const { addToast } = useToasts();
   const address = useSelector(addressSelector);
+  const allowlist = useSelector(allowlistSelector);
   const isCartOpened = useSelector(cartStateSelector);
   const isMyLandsOpened = useSelector(isMyLandSelector);
   const cartItems = useSelector(cartItemsSelector);
@@ -537,6 +542,20 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
         status = 'Reserved';
       }
 
+      const MT = [
+        [
+          ['0x5b3999bc2e8c46f75BF629DA951559D83E34FBdD', 5],
+          ['0x27ff262f0383E31F654ea00E78a043075f00A1A1', 3],
+          ['0xD4511E8D0233613383502E3da416Ac26c768C57e', 3],
+          ['0xA9A088600Fb0D0dD392445cc6328f07D352f59b0', 3],
+          ['0x5B38Da6a701c568545dCfcB03FcB875f56beddC4', 2]
+        ],
+        ['address', 'uint']
+      ];
+
+      // @ts-ignore
+      const maxFreeAmount = MT[0].filter((el) => el[0] == address)[0]?.[1];
+
       popup.current?.setContent(`<div class="claim-popup">
         <div class="popup-title">
           Land Plot #${tokenNumber}
@@ -560,7 +579,7 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
               address &&
               !reservedEntities.has(tokenNumber ?? -1)
                 ? `
-              <div>
+              <div style="display:flex;flex-direction:column;flex-gap:2rem;align-items:center;justify-content:center">
                 <button onclick="window.claim([${tokenNumber}])" class="popup-claim-now">
                   ${
                     onePlotFee.current > 0
@@ -573,6 +592,19 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
                       : ''
                   }
                 </button>
+                ${
+                  maxFreeAmount &&
+                  allowlist[1]?.[address as Address] < maxFreeAmount
+                    ? `<p>or</p>
+                <button onclick="window.claim([${tokenNumber}], true)" class="popup-claim-now" style="margin-top:0;background:#fff;">
+                  <span id="claim">Claim for free (${
+                    //@ts-ignore
+                    allowlist[1]?.[address as Address]
+                  }/${maxFreeAmount})</span>
+                </button>`
+                    : ''
+                }
+
               </div>
               <div>
                 ${
@@ -601,7 +633,7 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
       popup.current?.setCartesian3v(groundPos);
       popup.current?.setVisibility(true);
     });
-  }, [address, dispatch, isInCart, setCurrentTokenNumber, globe]);
+  }, [address, allowlist, dispatch, isInCart, setCurrentTokenNumber, globe]);
 
   return (
     <PartedMarsMainWrapper>

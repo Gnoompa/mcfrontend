@@ -21,18 +21,15 @@ class PolygonBackend {
   };
 
   static getHeaderStats = async () => {
-    const rawResponse = await fetch(
-      `${NETWORK_DATA.LAND_META_SERVER}clny-stat`,
-      {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
+    return fetch(`${NETWORK_DATA.LAND_META_SERVER}clny-stat`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
       }
-    );
-    const content = await rawResponse.json();
-    return content;
+    })
+      .then((res) => res.json())
+      .catch(() => {});
   };
 }
 

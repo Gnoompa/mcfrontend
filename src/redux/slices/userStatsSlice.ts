@@ -1,4 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Address } from 'viem';
+
+export type TAllowlistCounter = number;
 
 export interface BalanceStateInterface {
   balance: number;
@@ -11,6 +14,9 @@ export interface BalanceStateInterface {
   landsStats: any[];
   landMissionsLimits: Record<string, number> | null;
   avatarMissionsLimits: Record<string, number> | null;
+  allowlist: {
+    [allowlistId: number]: { [address: Address]: TAllowlistCounter };
+  };
 }
 
 const initialState: BalanceStateInterface = {
@@ -23,7 +29,8 @@ const initialState: BalanceStateInterface = {
   address: '',
   landsStats: [],
   landMissionsLimits: null,
-  avatarMissionsLimits: null
+  avatarMissionsLimits: null,
+  allowlist: {}
 };
 
 export const balanceStatsSlice = createSlice({
@@ -87,6 +94,9 @@ export const balanceStatsSlice = createSlice({
     },
     setAvatarsMissionsLimits: (state, action) => {
       state.avatarMissionsLimits = action.payload;
+    },
+    setAllowlist: (state, action) => {
+      state.allowlist = action.payload;
     }
   }
 });
@@ -104,7 +114,8 @@ export const {
   resetUserTokens,
   setLandsStats,
   setLandsMissionsLimits,
-  setAvatarsMissionsLimits
+  setAvatarsMissionsLimits,
+  setAllowlist
 } = balanceStatsSlice.actions;
 
 export default balanceStatsSlice.reducer;
