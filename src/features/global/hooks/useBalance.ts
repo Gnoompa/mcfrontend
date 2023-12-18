@@ -21,7 +21,6 @@ import {
   trackUserEvent
 } from '@global/utils/analytics';
 import { EMPTY_ADDRESS } from '@global/utils/etc';
-import { StandardMerkleTree } from '@openzeppelin/merkle-tree';
 import {
   isCollectingSelector,
   isLoadingTokensSelector
@@ -270,10 +269,11 @@ export const useBalance = () => {
                   1,
                   maxFreeAmount,
                   // @ts-ignore
-                  StandardMerkleTree.of(MT[0], MT[1]).getProof([
-                    userAddress,
-                    maxFreeAmount
-                  ])
+                  // StandardMerkleTree.of(MT[0], MT[1]).getProof([
+                  //   userAddress,
+                  //   maxFreeAmount
+                  // ])
+                  '0x00'
                 ]
               ]
             : tokenNumbers,
