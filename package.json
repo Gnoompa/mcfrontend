@@ -39,7 +39,7 @@
     "web3modal": "1.9.4"
   },
   "scripts": {
-    "start": "react-app-rewired start",
+    "start": "export BACKEND_URL=http://54.255.58.248:8081/ && export REACT_APP_NETWORK=mumbai && export REACT_APP_MIXPANEL_TOKEN=11331882649902fb1faf798e1e9f2bba && react-app-rewired start",
     "build": "react-app-rewired --max_old_space_size=4096 build",
     "serve": "serve -s build -l 4000",
     "build-ci": "DISABLE_ESLINT_PLUGIN=true GENERATE_SOURCEMAP=false react-app-rewired --max_old_space_size=4096 build",

@@ -1,5 +1,8 @@
 import { useAvatars } from '@avatars/hooks/useAvatars';
+import { ALLOWLIST } from '@features/allowlist/constants';
+import useAllowlist from '@features/allowlist/hooks/useAllowlist';
 import { freeReserve } from '@features/globus/utils/reserveHelper';
+import { TLandClaimOnchainPayload } from '@features/lands/hooks/useLands';
 import {
   BUNCH_SIZE,
   EARNED_AMOUNT_CHECK_TICK,
@@ -20,7 +23,7 @@ import {
   trackGoogleAnalyticsEvent,
   trackUserEvent
 } from '@global/utils/analytics';
-import { EMPTY_ADDRESS } from '@global/utils/etc';
+import { EMPTY_ADDRESS, EMPTY_BYTES32 } from '@global/utils/etc';
 import {
   isCollectingSelector,
   isLoadingTokensSelector
@@ -107,6 +110,7 @@ export const useBalance = () => {
   // FEATURES
   const { getUserAvatars, getAvatarsXP, getAvatarsNames, calculateAvatarsXP } =
     useAvatars();
+  const { getAllowlistProof, getAllowlist } = useAllowlist();
 
   // UTILS
   const dispatch = useDispatch();
@@ -216,9 +220,12 @@ export const useBalance = () => {
       tokenNumbers: number[],
       address: string,
       web3Instance: Web3,
-      isFreeClaim?: boolean
+      isFreeClaim
     ) => {
-      trackGoogleAnalyticsEvent('cart.start', { tokens: tokenNumbers });
+      trackGoogleAnalyticsEvent('cart.start', {
+        tokens: tokenNumbers
+      });
+
       for (const tokenNumber of tokenNumbers) {
         if (Number.isNaN(tokenNumber)) return;
         const tokenId: string = tokenNumber.toString();
@@ -226,57 +233,56 @@ export const useBalance = () => {
       }
 
       let txHash: string | null = null;
+      let landClaimData: TLandClaimOnchainPayload[] = [];
 
-      const feeValue = isFreeClaim
-        ? 0
-        : await makeRequest({
-            method: CONTRACT_METHODS.getFee,
-            params: [
-              tokenNumbers.length,
-              localStorage.getItem('referralAddress') ?? EMPTY_ADDRESS
-            ],
-            address,
-            type: METAMASK_EVENTS.call,
-            contract: gameManager ?? getGameManager()
-          });
+      if (isFreeClaim) {
+        const allowlist = await getAllowlist(
+          ALLOWLIST.DISCOUNTED_LAND,
+          address
+        );
 
-      const MT = [
-        [
-          ['0x5b3999bc2e8c46f75BF629DA951559D83E34FBdD', 5],
-          ['0x27ff262f0383E31F654ea00E78a043075f00A1A1', 3],
-          ['0xD4511E8D0233613383502E3da416Ac26c768C57e', 3],
-          ['0xA9A088600Fb0D0dD392445cc6328f07D352f59b0', 3],
-          ['0x5B38Da6a701c568545dCfcB03FcB875f56beddC4', 2]
+        allowlist.data &&
+          (landClaimData = [
+            {
+              tokenId: tokenNumbers[0],
+              allowlistId: ALLOWLIST.DISCOUNTED_LAND,
+              allowlistUseLimit: allowlist.data.split(',')[0],
+              allowlistData: allowlist.data.split(',')[1],
+              allowlistProof: await getAllowlistProof(
+                ALLOWLIST.DISCOUNTED_LAND,
+                address
+              )
+            }
+          ]);
+      } else {
+        landClaimData = [
+          {
+            tokenId: tokenNumbers[0],
+            allowlistId: 0,
+            allowlistUseLimit: 0,
+            allowlistData: EMPTY_BYTES32,
+            allowlistProof: [EMPTY_BYTES32]
+          }
+        ];
+      }
+
+      const feeValue = await makeRequest({
+        method: CONTRACT_METHODS.getLandClaimFee,
+        params: [
+          landClaimData,
+          localStorage.getItem('referralAddress') ?? EMPTY_ADDRESS
         ],
-        ['address', 'uint']
-      ];
-
-      // @ts-ignore
-      const maxFreeAmount = MT[0].filter(
-        // @ts-ignore
-        (el) => `${el[0]}`.toLowerCase() == userAddress?.toLowerCase()
-      )[0][1];
+        address,
+        type: METAMASK_EVENTS.call,
+        contract: gameManager ?? getGameManager()
+      });
 
       makeRequest({
         type: METAMASK_EVENTS.send,
         method: CONTRACT_METHODS.claim,
         contract: gameManager ?? getGameManager(),
         params: [
-          isFreeClaim
-            ? [
-                [
-                  tokenNumbers[0],
-                  1,
-                  maxFreeAmount,
-                  // @ts-ignore
-                  // StandardMerkleTree.of(MT[0], MT[1]).getProof([
-                  //   userAddress,
-                  //   maxFreeAmount
-                  // ])
-                  '0x00'
-                ]
-              ]
-            : tokenNumbers,
+          landClaimData,
           localStorage.getItem('referralAddress') ?? EMPTY_ADDRESS
         ],
         onLoad: (hash: string) => {

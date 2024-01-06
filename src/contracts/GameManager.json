@@ -22,6 +22,31 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "data",
+        "type": "bytes32"
+      }
+    ],
+    "name": "Allowlist",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": false,
         "internalType": "uint256",
         "name": "tokenId",
@@ -226,7 +251,7 @@
         "type": "address"
       }
     ],
-    "name": "allowlistCounter",
+    "name": "allowlistUseCounter",
     "outputs": [
       {
         "internalType": "uint256",
@@ -460,8 +485,13 @@
           },
           {
             "internalType": "uint256",
-            "name": "allowlistLimit",
+            "name": "allowlistUseLimit",
             "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "allowlistData",
+            "type": "bytes32"
           },
           {
             "internalType": "bytes32[]",
@@ -495,25 +525,6 @@
     "name": "claimEarned",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "claimedFreeLandAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -571,19 +582,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "freeLandClaimAllowlist",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -592,11 +590,11 @@
       },
       {
         "internalType": "address",
-        "name": "sender",
+        "name": "target",
         "type": "address"
       }
     ],
-    "name": "getAllowlistCounter",
+    "name": "getAllowlistUseCounter",
     "outputs": [
       {
         "internalType": "uint256",
@@ -739,6 +737,96 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "allowlistId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "allowlistUseLimit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "allowlistData",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "bytes32[]",
+            "name": "allowlistProof",
+            "type": "bytes32[]"
+          }
+        ],
+        "internalType": "struct GameManagerSharesResettlementUpgrade.LandPlotClaimData[]",
+        "name": "landPlots",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "address",
+        "name": "referrer",
+        "type": "address"
+      }
+    ],
+    "name": "getLandClaimFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "allowlistId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "allowlistUseLimit",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "allowlistData",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes32[]",
+        "name": "proof",
+        "type": "bytes32[]"
+      }
+    ],
+    "name": "isInAllowlist",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",

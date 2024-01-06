@@ -28,6 +28,7 @@ export declare global {
   var ogPopup: any;
   var goToCart: any;
   var navigateToToken: any;
+  var callbacks: Record<string, Record<string, Function>>;
   var updateCLNY: any;
   var updateEarnedAll: any;
   var fetchBalance: any;

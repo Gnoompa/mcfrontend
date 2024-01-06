@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { useToasts } from 'react-toast-notifications';
 import { fromWeiValue } from '@features/global/utils/fromWei';
 import PolygonBackend from '@root/api/polygonBackend';
 import { Cristal } from '@root/images/icons/Cristal';
 import { Minning } from '@root/images/icons/Minning';
 import { Stone } from '@root/images/icons/Stone';
 import { NETWORK_DATA } from '@root/settings';
+import { useEffect, useState } from 'react';
+import { useToasts } from 'react-toast-notifications';
 
 import {
   IconContent,
@@ -76,11 +76,11 @@ export const PolygonScreen = () => {
             </IconContent>
             <Statistic>
               <div>
-                <StatisticCount>{fromWeiValue(stats.minted)}</StatisticCount>
+                <StatisticCount>{fromWeiValue(stats?.minted)}</StatisticCount>
                 <StatisticText> {NETWORK_DATA.TOKEN_NAME} minted</StatisticText>
               </div>
               <div>
-                <StatisticCount>{fromWeiValue(stats.burned)}</StatisticCount>
+                <StatisticCount>{fromWeiValue(stats?.burned)}</StatisticCount>
                 <StatisticText> {NETWORK_DATA.TOKEN_NAME} burned</StatisticText>
               </div>
             </Statistic>
@@ -91,14 +91,14 @@ export const PolygonScreen = () => {
             </IconContent>
             <Statistic>
               <div>
-                <StatisticCount>{fromWeiValue(stats.avg, 1)}</StatisticCount>
+                <StatisticCount>{fromWeiValue(stats?.avg, 1)}</StatisticCount>
                 <StatisticText>
                   {' '}
                   Average {NETWORK_DATA.TOKEN_NAME}/day
                 </StatisticText>
               </div>
               <div>
-                <StatisticCount>{fromWeiValue(stats.max, 1)}</StatisticCount>
+                <StatisticCount>{fromWeiValue(stats?.max, 1)}</StatisticCount>
                 <StatisticText>
                   {' '}
                   Max {NETWORK_DATA.TOKEN_NAME}/day

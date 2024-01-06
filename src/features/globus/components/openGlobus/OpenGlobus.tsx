@@ -1,3 +1,5 @@
+import { ALLOWLIST } from '@features/allowlist/constants';
+import useAllowlist from '@features/allowlist/hooks/useAllowlist';
 import useMetamask from '@features/global/hooks/useMetamask';
 import { lats, longs } from '@features/globus/constants';
 import {
@@ -31,14 +33,14 @@ import {
 import { userGameManagerSelector } from '@selectors/commonAppSelectors';
 import {
   addressSelector,
-  allowlistSelector
+  mintedTokensSelector,
+  tokensSelector
 } from '@selectors/userStatsSelectors';
 import { toggleMyLandPopup } from '@slices/appPartsSlice';
 import { addItemToCart } from '@slices/cartSlice';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToasts } from 'react-toast-notifications';
-import { Address } from 'viem';
 import Web3 from 'web3';
 
 interface Props {
@@ -68,9 +70,20 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
   const allTokensSet = React.useRef<Set<number>>(new Set());
   const onePlotFee = React.useRef<number>(0);
   const gm = useSelector(userGameManagerSelector);
+  const userTokens = useSelector(tokensSelector);
+  const userMintedTokens = useSelector(mintedTokensSelector);
   const { addToast } = useToasts();
   const address = useSelector(addressSelector);
-  const allowlist = useSelector(allowlistSelector);
+  const {
+    allowlistData: discountedLandAllowlistData,
+    getAllowlistUseCounter: getDiscountedLandAllowlistUseCounter
+  } = useAllowlist(ALLOWLIST.DISCOUNTED_LAND, address);
+  const [
+    discountedLandAllowlistUseCounter,
+    setDiscountedLandAllowlistUseCounter
+  ] = useState<number>();
+  const discountedLandAmount = discountedLandAllowlistData?.[0];
+
   const isCartOpened = useSelector(cartStateSelector);
   const isMyLandsOpened = useSelector(isMyLandSelector);
   const cartItems = useSelector(cartItemsSelector);
@@ -90,6 +103,16 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
       clearInterval(timer);
     };
   }, []);
+
+  React.useEffect(() => {
+    console.log(address, userTokens, userMintedTokens, 'TOKENS');
+
+    address &&
+      getDiscountedLandAllowlistUseCounter(
+        ALLOWLIST.DISCOUNTED_LAND,
+        address
+      ).then(setDiscountedLandAllowlistUseCounter);
+  }, [address, userTokens, userMintedTokens]);
 
   React.useEffect(() => {
     if (!address) {
@@ -542,20 +565,6 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
         status = 'Reserved';
       }
 
-      const MT = [
-        [
-          ['0x5b3999bc2e8c46f75BF629DA951559D83E34FBdD', 5],
-          ['0x27ff262f0383E31F654ea00E78a043075f00A1A1', 3],
-          ['0xD4511E8D0233613383502E3da416Ac26c768C57e', 3],
-          ['0xA9A088600Fb0D0dD392445cc6328f07D352f59b0', 3],
-          ['0x5B38Da6a701c568545dCfcB03FcB875f56beddC4', 2]
-        ],
-        ['address', 'uint']
-      ];
-
-      // @ts-ignore
-      const maxFreeAmount = MT[0].filter((el) => el[0] == address)[0]?.[1];
-
       popup.current?.setContent(`<div class="claim-popup">
         <div class="popup-title">
           Land Plot #${tokenNumber}
@@ -593,14 +602,14 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
                   }
                 </button>
                 ${
-                  maxFreeAmount &&
-                  allowlist[1]?.[address as Address] < maxFreeAmount
+                  ![
+                    discountedLandAllowlistUseCounter,
+                    discountedLandAmount
+                  ].includes(undefined) &&
+                  discountedLandAmount - discountedLandAllowlistUseCounter > 0
                     ? `<p>or</p>
-                <button onclick="window.claim([${tokenNumber}], true)" class="popup-claim-now" style="margin-top:0;background:#fff;">
-                  <span id="claim">Claim for free (${
-                    //@ts-ignore
-                    allowlist[1]?.[address as Address]
-                  }/${maxFreeAmount})</span>
+                <button onclick="window.claim([${tokenNumber}], true)" class="popup-claim-now" style="margin-top:0;background:#34ff61;">
+                  <span id="claim">Claim for free (${discountedLandAllowlistUseCounter}/${discountedLandAmount})</span>
                 </button>`
                     : ''
                 }
@@ -633,7 +642,17 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
       popup.current?.setCartesian3v(groundPos);
       popup.current?.setVisibility(true);
     });
-  }, [address, allowlist, dispatch, isInCart, setCurrentTokenNumber, globe]);
+  }, [
+    address,
+    discountedLandAmount,
+    discountedLandAllowlistUseCounter,
+    userTokens,
+    userMintedTokens,
+    dispatch,
+    isInCart,
+    setCurrentTokenNumber,
+    globe
+  ]);
 
   return (
     <PartedMarsMainWrapper>

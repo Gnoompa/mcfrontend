@@ -1,3 +1,4 @@
+import { ALLOWLIST } from '@features/allowlist/constants';
 import useMetamask from '@features/global/hooks/useMetamask';
 import { userGameManagerSelector } from '@selectors/commonAppSelectors';
 import {
@@ -7,7 +8,18 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-export const FREE_LAND_ALLOWLIST_ID = 1;
+export interface ILandClaimData {
+  tokenId: number;
+  allowlistId: ALLOWLIST;
+}
+
+export type TLandClaimOnchainPayload = {
+  tokenId: number;
+  allowlistId: ALLOWLIST | 0;
+  allowlistUseLimit: number;
+  allowlistData: string;
+  allowlistProof: string[];
+};
 
 const useLands = (tokens: string[] | null, ethInstance?: any) => {
   const [stats, setStats] = useState<unknown[]>([]);
@@ -39,10 +51,10 @@ const useLands = (tokens: string[] | null, ethInstance?: any) => {
   const getAllowlistClaims = useCallback(() => {
     makeCallRequest<unknown[]>({
       contract: gm ?? window.GM,
-      method: 'getAllowlistCounter',
-      params: [FREE_LAND_ALLOWLIST_ID, address],
+      method: 'getAllowlistUseCounter',
+      params: [ALLOWLIST.DISCOUNTED_LAND, address],
       address,
-      errorText: 'Error getting lands free claiming allowlist'
+      errorText: 'Error getting discounted land allowlist use counter'
     });
   }, [gm]);
 

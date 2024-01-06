@@ -36,6 +36,7 @@ export type MetamaskWrapperType = {
 export enum CONTRACT_METHODS {
   balanceOf = 'balanceOf',
   getFee = 'getFee',
+  getLandClaimFee = 'getLandClaimFee',
   claim = 'claim',
   safeTransferFrom = 'safeTransferFrom',
   claimEarned = 'claimEarned',

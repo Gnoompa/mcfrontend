@@ -1,6 +1,5 @@
 import { useAvatars } from '@avatars/hooks/useAvatars';
 import { GearModal } from '@features/gear/components/modal/gearModal';
-import useAllowlist from '@features/global/hooks/useAllowlist';
 import useLootboxes from '@features/lootboxes/hooks/useLootboxes';
 import Layout from '@global/components/layout/layout';
 import {
@@ -30,7 +29,6 @@ import { setClnyPrice } from '@slices/lootboxesSlice';
 import React, { ReactElement, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { Address } from 'viem';
 
 function DataProvider({ children }: { children: ReactElement }) {
   const location = useLocation();
@@ -46,16 +44,11 @@ function DataProvider({ children }: { children: ReactElement }) {
   const { tokens, updateEarnedAll, updateCLNYBalance } = useBalance();
   const { isAvatarsAvailable, isBalanceCheckerTick, isLootboxesAvailable } =
     useFlags();
-  const { fetchAllowlistCounter } = useAllowlist();
 
   const isAvatarsPopupShown = useSelector(isAvatarsPopupOpened);
   const isAvatarToEdit = useSelector(isAvatarToEditSelector);
   const isAvatarSelectOpened = useSelector(isAvatarSelectMode);
   const isRevshareModal = useSelector(isRevShareModalSelector);
-
-  useEffect(() => {
-    web3Instance && address && fetchAllowlistCounter(1, address as Address);
-  }, [web3Instance, address]);
 
   useEffect(() => {
     const id = extractURLParam(location, 'id');

@@ -24,6 +24,3 @@ export const landsMissionsLimitsSelector = (state: RootState) =>
 
 export const avatarsMissionsLimitsSelector = (state: RootState) =>
   state.balanceStats.avatarMissionsLimits;
-
-export const allowlistSelector = (state: RootState) =>
-  state.balanceStats.allowlist;
