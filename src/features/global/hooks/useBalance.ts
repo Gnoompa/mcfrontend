@@ -329,7 +329,7 @@ export const useBalance = () => {
           dispatch(setClaimingCartStatus(false));
         },
         transactionOptions: {
-          value: feeValue,
+          value: isFreeClaim ? 0 : feeValue,
           type: CURRENT_CHAIN.x2
         },
         address,

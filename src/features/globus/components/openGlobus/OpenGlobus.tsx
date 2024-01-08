@@ -609,7 +609,10 @@ export const OpenGlobus = ({ height, allTokens, myTokens }: Props) => {
                   discountedLandAmount - discountedLandAllowlistUseCounter > 0
                     ? `<p>or</p>
                 <button onclick="window.claim([${tokenNumber}], true)" class="popup-claim-now" style="margin-top:0;background:#34ff61;">
-                  <span id="claim">Claim for free (${discountedLandAllowlistUseCounter}/${discountedLandAmount})</span>
+                  <span id="claim">Claim for free (${
+                    +discountedLandAllowlistUseCounter + 1 ||
+                    discountedLandAllowlistUseCounter
+                  }/${discountedLandAmount})</span>
                 </button>`
                     : ''
                 }

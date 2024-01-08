@@ -227,7 +227,9 @@ export const contracts: Record<
     LB: '0x124156E8acF1474fd23289513351668bb891e9d1',
     REPLACE: '0x331eD65Ecb4FB76376874772f300a2C897A8c25E',
     MINING_POOLS: [],
-    BACKEND: 'https://backend-polygon.marscolony.io',
+    BACKEND:
+      process.env.REACT_APP_BACKEND_URL ||
+      'https://backend-polygon.marscolony.io',
     LAND_META: 'https://meta-polygon.marscolony.io/tokens',
     LAND_META_SERVER: 'https://meta-polygon.marscolony.io/',
     AVATAR_META: 'https://meta-avatar-polygon.marscolony.io/',
