@@ -161,18 +161,36 @@ export const contracts: Record<
     TOKEN_NAME: 'pCLNY',
     ID: 80001,
     RPC: 'https://rpc-mumbai.maticvigil.com',
-    MC: '0x48Da958F43AC9A5bdE3b08Cc65393E8d4A56dfE4',
-    CLNY: '0xF4d68D93fc2b3F4D9CC8EA1bE1253e1Cb254D3D0',
-    GM: '0x36984ed30f720eF0df06186bf1C51d1685D3953D',
-    AM: '0x8c7E164f906506863B074bdD7E40c9b77C52940C',
-    MM: '0xda85687624242F2C56CfB32E98A6afe67980Cb1f',
-    CH: '0x8F0bee15113f0a6857Cc76599ab46E48c0582d54',
-    LB: '0x1c36C79E63AAc2294E8382ba0DC582623d0002DC',
+    MC:
+      process.env.REACT_APP_MUMBAI_MC ||
+      '0x48Da958F43AC9A5bdE3b08Cc65393E8d4A56dfE4',
+    CLNY:
+      process.env.REACT_APP_MUMBAI_MCLN ||
+      '0xF4d68D93fc2b3F4D9CC8EA1bE1253e1Cb254D3D0',
+    GM:
+      process.env.REACT_APP_MUMBAI_GAME_MANAGER ||
+      '0x36984ed30f720eF0df06186bf1C51d1685D3953D',
+    AM:
+      process.env.REACT_APP_MUMBAI_COLLECYION_MANAGER ||
+      '0x8c7E164f906506863B074bdD7E40c9b77C52940C',
+    MM:
+      process.env.REACT_APP_MUMBAI_MM ||
+      '0xda85687624242F2C56CfB32E98A6afe67980Cb1f',
+    CH:
+      process.env.REACT_APP_MUMBAI_CH ||
+      '0x8F0bee15113f0a6857Cc76599ab46E48c0582d54',
+    LB:
+      process.env.REACT_APP_MUMBAI_LB ||
+      '0x1c36C79E63AAc2294E8382ba0DC582623d0002DC',
     REPLACE: '0xDF9868591ab3C9596E3476e33D8B876f38751FC1',
     MINING_POOLS: [],
     BACKEND: process.env.REACT_APP_BACKEND_URL || 'http://localhost:8081',
-    LAND_META: 'https://meta-mumbai.marscolony.io/tokens',
-    LAND_META_SERVER: 'https://meta-mumbai.marscolony.io/',
+    LAND_META:
+      process.env.REACT_APP_LAND_META ||
+      'https://meta-mumbai.marscolony.io/tokens',
+    LAND_META_SERVER:
+      process.env.REACT_APP_LAND_META_SERVER ||
+      'https://meta-mumbai.marscolony.io/',
     AVATAR_META: 'https://meta-avatar-test.marscolony.io/',
     AVATAR_MINTING: true,
     SOLDOUT: false,
