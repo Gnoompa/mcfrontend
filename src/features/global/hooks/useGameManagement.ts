@@ -1,5 +1,3 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useToasts } from 'react-toast-notifications';
 import QuestsBackend from '@api/questsBackend';
 import { trackUserEvent } from '@global/utils/analytics';
 import { formatRequestWrapperPayload } from '@global/utils/gas';
@@ -19,13 +17,15 @@ import {
 } from '@selectors/gameManagerSelectors';
 import { tokensSelector } from '@selectors/userStatsSelectors';
 import {
-  changeGameMode,
   GAME_VIEW_MODES,
+  changeGameMode,
   selectObjectToSet,
   setBuildPending,
   setLandInfoPart
 } from '@slices/gameManagementSlice';
 import { setLandsMissionsLimits } from '@slices/userStatsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useToasts } from 'react-toast-notifications';
 import { CONTRACT_METHODS } from '../types';
 import useMetamask from './useMetamask';
 
@@ -67,6 +67,9 @@ const useGameManagement = () => {
     if (!data) {
       return null;
     }
+
+    console.log(data, 'DATA');
+
     const [bs, transport, ra, pp] = [
       data[0]['2'],
       data[0]['3'],

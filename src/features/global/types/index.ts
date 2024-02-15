@@ -76,6 +76,7 @@ export enum SIDEBAR_ROUTES_NAMES {
   home = 'Home',
   lands = 'Lands',
   profile = 'Profile',
+  leaderboard = 'Leaderboard',
   play = 'Play',
   missions = 'Missions',
   dex = 'DEX',

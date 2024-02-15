@@ -7,6 +7,8 @@ import { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ToastProvider } from 'react-toast-notifications';
+import { ThemeProvider } from 'styled-components';
+import theme from './theme';
 
 // Enabling the debug mode flag is useful during implementation,
 // but it's recommended you remove it for production
@@ -22,7 +24,9 @@ ReactDOM.render(
   >
     <Provider store={store}>
       <Fragment>
-        <AppRouter />
+        <ThemeProvider theme={theme}>
+          <AppRouter />
+        </ThemeProvider>
         <GlobalStyle />
         <Music />
       </Fragment>

@@ -1,5 +1,3 @@
-import React, { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { LandPlotEarnedButton } from '@features/lands/styles/landPlot.styles';
 import { Ticked } from '@global/components/ticked/Ticked';
 import { EnhButton } from '@root/legacy/buttons/enhButton/EnhButton';
@@ -10,6 +8,8 @@ import {
   GAME_VIEW_MODES,
   selectObjectToSet
 } from '@slices/gameManagementSlice';
+import React, { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   EhchSidebarWrapper,
@@ -113,6 +113,8 @@ export const Enhancement: React.FC<Props> = ({
       `${val} ${NETWORK_DATA.TOKEN_NAME}/day`
     );
   };
+
+  console.log(title, isAvailable, isPlaced, oldNew);
 
   if (!isGamePage) {
     return (

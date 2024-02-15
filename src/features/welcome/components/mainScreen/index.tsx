@@ -1,11 +1,12 @@
-import React, { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+// @ts-nocheck
 import Button from '@global/components/button';
 import { LINKS } from '@global/constants';
 import useFlags from '@global/hooks/useFlags';
 import usePersonalInfo from '@global/hooks/usePersonalInfo';
 import { trackUserEvent } from '@global/utils/analytics';
 import { LinkIcon } from '@images/icons/LinkIcon';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   WelcomeModalButtonsBlock,
@@ -36,6 +37,7 @@ export const MainScreen = () => {
       <WelcomeModalWrapper>
         <WelcomeModalTitleBlock>
           <p>Welcome to mars colony</p>
+
           <p>
             What is marscolony{' '}
             <LinkIcon

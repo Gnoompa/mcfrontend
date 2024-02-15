@@ -2,6 +2,15 @@ const path = require('path');
 const resolvePath = (p) => path.resolve(__dirname, p);
 
 module.exports = function override(config) {
+  // config.module.rules = [
+  //   ...config.module.rules,
+  //   {
+  //     test: /\.mjs$/,
+  //     include: /node_modules/,
+  //     type: 'javascript/auto'
+  //   }
+  // ];
+
   config.resolve = {
     ...config.resolve,
     alias: {

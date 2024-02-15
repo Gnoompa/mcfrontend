@@ -1,21 +1,12 @@
-import React, {
-  ElementType,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useAvatars } from '@avatars/hooks/useAvatars';
 import {
   SidebarAvatarWrapper,
   SidebarBackOverlay,
   SidebarItemCounter,
   SidebarItemName,
+  SidebarItemWrapper,
   SidebarItemsList,
   SidebarItemsListInner,
-  SidebarItemWrapper,
   SidebarMobileControl,
   SidebarTitle,
   SidebarWrapper
@@ -39,8 +30,12 @@ import { PlayIcon } from '@images/icons/sidebarIcons/PlayIcon';
 import { ProfileIcons } from '@images/icons/sidebarIcons/ProfileIcons';
 import { ReferralIcon } from '@images/icons/sidebarIcons/ReferralIcon';
 import { SidebarOpenIcon } from '@images/icons/sidebarIcons/SidebarOpenIcon';
+import { LeaderboardIcon } from '@root/images/icons/sidebarIcons/LeaderboardIcon';
 import { landsMissionsLimitsSelector } from '@selectors/userStatsSelectors';
 import { toggleMyLandPopup } from '@slices/appPartsSlice';
+import { ElementType, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type SideBarItemType = {
   route: string;
@@ -186,6 +181,16 @@ const Sidebar = ({ isMobile }: { isMobile: boolean }) => {
         count: 0,
         name: SIDEBAR_ROUTES_NAMES.lands,
         trackEvent: 'Lands page clicked'
+      },
+      {
+        route: '/leaderboard/',
+        onClick: () => {
+          return navigate('/leaderboard/');
+        },
+        icon: LeaderboardIcon,
+        isActive: true,
+        name: SIDEBAR_ROUTES_NAMES.leaderboard,
+        trackEvent: 'Leaderboard page clicked'
       },
       {
         route: '/play/',

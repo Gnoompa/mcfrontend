@@ -244,49 +244,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "allowlistUseCounter",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "allowlists",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "name": "baseStationsPlacement",
@@ -646,6 +603,11 @@
             "internalType": "uint8",
             "name": "powerProduction",
             "type": "uint8"
+          },
+          {
+            "internalType": "address",
+            "name": "tokenOwner",
+            "type": "address"
           }
         ],
         "internalType": "struct IGameManager.AttributeData[]",

@@ -171,7 +171,7 @@ export const contracts: Record<
       process.env.REACT_APP_MUMBAI_GAME_MANAGER ||
       '0x36984ed30f720eF0df06186bf1C51d1685D3953D',
     AM:
-      process.env.REACT_APP_MUMBAI_COLLECYION_MANAGER ||
+      process.env.REACT_APP_MUMBAI_COLLECTION_MANAGER ||
       '0x8c7E164f906506863B074bdD7E40c9b77C52940C',
     MM:
       process.env.REACT_APP_MUMBAI_MM ||
@@ -182,7 +182,9 @@ export const contracts: Record<
     LB:
       process.env.REACT_APP_MUMBAI_LB ||
       '0x1c36C79E63AAc2294E8382ba0DC582623d0002DC',
-    REPLACE: '0xDF9868591ab3C9596E3476e33D8B876f38751FC1',
+    REPLACE:
+      process.env.REACT_APP_MUMBAI_REPLACE ||
+      '0xDF9868591ab3C9596E3476e33D8B876f38751FC1',
     MINING_POOLS: [],
     BACKEND: process.env.REACT_APP_BACKEND_URL || 'http://localhost:8081',
     LAND_META:

@@ -2,8 +2,8 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_GameManager",
+        "internalType": "contract IDependencies",
+        "name": "_d",
         "type": "address"
       }
     ],
@@ -12,10 +12,10 @@
   },
   {
     "inputs": [],
-    "name": "gameManager",
+    "name": "d",
     "outputs": [
       {
-        "internalType": "contract IGameManager",
+        "internalType": "contract IDependencies",
         "name": "",
         "type": "address"
       }
@@ -46,6 +46,11 @@
                 "internalType": "uint32",
                 "name": "y",
                 "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "rotate",
+                "type": "uint32"
               }
             ],
             "internalType": "struct IGameManager.PlaceOnLand",
@@ -62,6 +67,11 @@
               {
                 "internalType": "uint32",
                 "name": "y",
+                "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "rotate",
                 "type": "uint32"
               }
             ],
@@ -80,6 +90,11 @@
                 "internalType": "uint32",
                 "name": "y",
                 "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "rotate",
+                "type": "uint32"
               }
             ],
             "internalType": "struct IGameManager.PlaceOnLand",
@@ -97,6 +112,11 @@
                 "internalType": "uint32",
                 "name": "y",
                 "type": "uint32"
+              },
+              {
+                "internalType": "uint32",
+                "name": "rotate",
+                "type": "uint32"
               }
             ],
             "internalType": "struct IGameManager.PlaceOnLand",
@@ -104,7 +124,7 @@
             "type": "tuple"
           }
         ],
-        "internalType": "struct GetCoords.Coordinates",
+        "internalType": "struct Replace.Coordinates",
         "name": "",
         "type": "tuple"
       }

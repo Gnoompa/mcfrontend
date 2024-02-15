@@ -1,9 +1,3 @@
-import {
-  BrowserRouter as Router,
-  Navigate,
-  Route,
-  Routes
-} from 'react-router-dom';
 import DataProvider from '@features/globus/hocs/dataProvider';
 import useFlags from '@global/hooks/useFlags';
 import GamePage from '@pages/GamePage';
@@ -13,15 +7,23 @@ import { QuestsPage } from '@pages/Quests';
 import { ReferralPage } from '@pages/ReferralPage';
 import WelcomePage from '@pages/WelcomePage';
 import XChange from '@pages/XChange';
+import Leaderboard from '@root/pages/Leaderboard';
 import { PlayPage } from '@root/pages/PlayPage';
 import { ProfilePage } from '@root/pages/ProfilePage';
 import ROUTES from '@root/router/routes';
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes
+} from 'react-router-dom';
 
 const generateRoutes = (flags: Record<string, boolean>) => {
   const routes = [
     { route: ROUTES.root, element: <WelcomePage /> },
     { route: ROUTES.lands, element: <MapPage /> },
-    { route: ROUTES.mining, element: <MiningMission /> }
+    { route: ROUTES.mining, element: <MiningMission /> },
+    { route: ROUTES.leaderboard, element: <Leaderboard /> }
   ];
 
   if (flags.profile) {
